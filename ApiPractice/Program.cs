@@ -1,7 +1,8 @@
+using ApiPractice.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+ServiceRegistration.AddApplicationServices(builder.Services, builder.Configuration);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
