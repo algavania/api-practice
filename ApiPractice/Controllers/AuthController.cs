@@ -15,9 +15,9 @@ namespace ApiPractice.Controllers
             try
             {
                 Console.WriteLine($"Login request: {request}");
-                var token = await authService.LoginAsync(request.Email, request.Password);
+                var data = await authService.LoginAsync(request.Email, request.Password);
 
-                var response = ApiResponse<string>.Success("Login successful", token);
+                var response = ApiResponse<LoginResponse>.Success("Login successful", data);
                 return Ok(response);
             }
             catch (Exception e)
@@ -32,8 +32,8 @@ namespace ApiPractice.Controllers
         {
             try
             {
-                var token = await authService.RegisterAsync(request.Name, request.Email, request.Password);
-                var response = ApiResponse<string>.Success("Registration successful", token);
+                var data = await authService.RegisterAsync(request.Name, request.Email, request.Password);
+                var response = ApiResponse<UserResponse>.Success("Registration successful", data);
                 return Ok(response);
             }
             catch (Exception e)

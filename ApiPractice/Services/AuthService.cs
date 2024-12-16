@@ -3,6 +3,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using ApiPractice.Domain.DTOs;
 using ApiPractice.Domain.Entities;
 using ApiPractice.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ public class AuthService(ApplicationDbContext context, IConfiguration config)
         private readonly ApplicationDbContext _context = context;
         private readonly string _jwtSecret = config["Jwt:Secret"]!;
 
-        public async Task<string> RegisterAsync(string name, string email, string password)
+        public async Task<UserResponse> RegisterAsync(string name, string email, string password)
         {
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (existingUser != null) throw new Exception($"Email {email} already exists");
@@ -27,15 +28,27 @@ public class AuthService(ApplicationDbContext context, IConfiguration config)
             };
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return GenerateJwtToken(user);
+            return new UserResponse
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+            };
         }
 
-        public async Task<string> LoginAsync(string email, string password)
+        public async Task<LoginResponse> LoginAsync(string email, string password)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null) throw new Exception("User not found");
             if (!BCrypt.Net.BCrypt.Verify(password, user.Password)) throw new Exception("Invalid password");
-            return GenerateJwtToken(user);
+            var token = GenerateJwtToken(user);
+            return new LoginResponse
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Token = token
+            };
         }
         
         private string GenerateJwtToken(User user)
