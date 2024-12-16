@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiPractice.Services;
 
-public class ServiceRegistration
+public static class ServiceRegistration
 {
     public static void AddApplicationServices(IServiceCollection services, IConfiguration configuration)
     {
@@ -11,5 +11,6 @@ public class ServiceRegistration
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
         );
         services.AddScoped<AuthService>();
+        services.AddScoped<UserService>();
     }
 }
