@@ -1,6 +1,5 @@
 using ApiPractice.Services;
 using ApiPractice.Domain.DTOs;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using RegisterRequest = ApiPractice.Domain.DTOs.RegisterRequest;
 
